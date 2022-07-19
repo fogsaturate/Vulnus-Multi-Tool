@@ -1,6 +1,7 @@
 import math
 import os
 import json
+import yt_dlp
 from pathlib import Path
 
 # dir variables
@@ -123,7 +124,20 @@ If you would like to quit the program, type "q"
 
 Input: """)
         if MiscInput == "1":
-            print("Work In Progress") # god this is probably going to make me fucking kms
+            ydl_opts = {
+                'format': 'mp3/bestaudio/best',
+                'paths': 'Output',
+                # ℹ️ See help(yt_dlp.postprocessor) for a list of available Postprocessors and their arguments
+                'postprocessors': [{  # Extract audio using ffmpeg
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                }]
+            }  
+            url = input("""Type in your youtube URL you would like to extract audio from.
+
+Input: """)
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                error_code = ydl.download(url)
         elif MappingToolInput.casefold() == "b":
             restart = True     
         
