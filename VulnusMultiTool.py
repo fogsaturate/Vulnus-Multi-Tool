@@ -189,7 +189,7 @@ Input: """)
             # hitobject parser + calculator
             vMapData.write('{"_approachDistance": 50, "_approachTime": 1, "_name": "'+difficultyName+'", "_notes": [')
 
-            for pos in range(0, len(hitObjectsLine)):
+            for pos in range(0, len(hitObjectsLine)-1):
                 mapSplit = hitObjectsLine[pos].split(",")
                 x = mapSplit[0]
                 y = mapSplit[1]
@@ -199,7 +199,7 @@ Input: """)
                 vY = (int(y) - 256) / 64
                 vS = int(ms) / 1000 
                 
-                if pos == len(hitObjectsLine)-1:
+                if pos == len(hitObjectsLine)-2:
                     vMapData.write('{"_time": '+str(vS)+', "_x": '+str(vX)+', "_y": '+str(vY)+'}]}')
                 else:
                     vMapData.write('{"_time": '+str(vS)+', "_x": '+str(vX)+', "_y": '+str(vY)+'}, ')
