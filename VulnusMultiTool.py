@@ -8,8 +8,8 @@ from pathlib import Path
 
 # dir variables
 outputpath = 'Output'
-convertedoutput = 'Output/converted.json'
-metaoutput = 'Output/meta.json'
+outputconvertedpath = 'Output/vConvertedData.json'
+outputmetapath = 'Output/meta.json'
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -64,8 +64,8 @@ ssMap = mapData.split(',')
 ssMapLength = len(ssMap)
 
 # Vulnus Parsing Variables
-vMapData = open(convertedoutput, "w")
-vMetadata = open(metaoutput, "w")
+vMapData = open(outputconvertedpath, "w")
+vMetadata = open(outputmetapath, "w")
 vMap = mapData.split('{"_time": ')
 vMapAttr = vMap[0].split(' "_')
 vMapLength = len(vMap)
@@ -94,14 +94,73 @@ Input: """)
                     
 1. Sound Space ---> Vulnus
 
-2. osu! ---> Vulnus (haxagon is a very mean person cause he hates SSQE)
+2. osu! ---> Vulnus
 
 If you would like to go back, type "b"
 If you would like to quit the program, type "q"
 
 Input: """)
-        if ConverterInput == "1": # ss to vulnus
-            mapData.split(',')
+        if ConverterInput == "1":
+            map = open("map.txt") #opens "map.txt"
+            mapData = map.read() #reads "map.txt" for map data
+
+            ssMapDataSplit = mapData.split(',') #splits the data at "," to receive each individual x, y and time stamp
+            ssMapDataLength = len(ssMapDataSplit) #finds the length of the split data
+            
+            vConvertedData = open(outputconvertedpath, "w") #opens the "vConvertedData.json" file located in the 'Output' folder
+            vMetaData = open(outputmetapath, "w") #opens the "meta.json" file located in the 'Output' folder
+
+            musicArtist = str(input("\nMusic Artist: "))
+            mapMappers = str(input("\nMap Mapper(s): "))
+            mapMusic = str(input("\nMusic Filename: "))
+            mapTitle = str(input("\nMap Title: "))
+
+            vMetaData.write('{"_artist": "'+musicArtist+'", "_difficulties": ["vConvertedData.json"], "_mappers": ["'+mapMappers+'"], "_music": "'+mapMusic+'", "_title": "'+mapTitle+'", "_version": 1}')
+            #line above writes all the data the user just inputted into the "meta.json" file
+            vMetaData.close()
+            #line above closes the "meta.json" file to save its contents
+
+            mapApproachDistance = int(input("\nApproach Distance: "))
+            mapApproachTime = int(input("\nApproach Time (s): "))
+            mapName = str(input("\nMap Name: "))
+            mapOffset = int(input("\nMap Offset (ms): "))
+
+            vConvertedData.write('{"_approachDistance": '+str(mapApproachDistance)+', "_approachTime": '+str(mapApproachTime)+', "_name": "'+mapName+'", "_notes": [{"_time": ')
+            #line above writes all the data the user just inputted into the "vConvertedData.json" file
+            for pos in range(1, ssMapDataLength): #loops through the list of positions and times throughout the map data
+                ssMapDataParsed = ssMapDataSplit[pos].split("|") #splits the map data at "|"
+                ssX = ssMapDataParsed[0] #sets the first item in the list of parsed data equal to ssX (first item will be the x coordinate of the note)
+                ssY = ssMapDataParsed[1] #sets the second item in the list of parsed data equal to ssY (second item will be the y coordinate of the note)
+                ssTime = ssMapDataParsed[2] #sets the third item in the list of parsed data equal to ssTime (third item will be the time stamp of the note)
+                if pos == 1: #checks to see whether it is the first  
+                    vConvertedData.write(str(round((int(ssTime)+mapOffset)/1000, 3))+', ')
+                else:
+                    vConvertedData.write('{"_time": '+str(round((int(ssTime)+mapOffset)/1000, 3))+', ')
+                if ssX == "0":
+                    vConvertedData.write('"_x": -1, ')
+                elif ssX == "1":
+                    vConvertedData.write('"_x": 0, ')
+                elif ssX == "2":
+                    vConvertedData.write('"_x": 1, ')
+                else:
+                    vConvertedData.write('"_x": '+str(float(ssX)-1)+', ')     
+                if ssY == "0" and pos == ssMapLength-1:
+                    vConvertedData.write('"_y": -1}]}')
+                elif ssY == "0":
+                    vConvertedData.write('"_y": -1}, ')
+                elif ssY == "1" and pos == ssMapLength-1:
+                    vConvertedData.write('"_y": 0}]}')
+                elif ssY == "1":
+                    vConvertedData.write('"_y": 0}, ')
+                elif ssY == "2" and pos == ssMapLength-1:
+                    vConvertedData.write('"_y": 1}]}')
+                elif ssY == "2":
+                    vConvertedData.write('"_y": 1}, ')
+                elif isinstance(float(ssY), float) and pos == ssMapLength-1:
+                    vConvertedData.write('"_y": '+str(float(ssY)-1)+'}]}')
+                else:
+                    vConvertedData.write('"_y": '+str(float(ssY)-1)+'}, ')
+            vConvertedData.close()
             
         if ConverterInput == "2": # osu to vulnus
             # osu metadata parsing
@@ -120,8 +179,7 @@ Input: """)
             
             # hitobject parser + calculator
             
-            
-            
+
         elif ConverterInput.casefold() == "b":
             restart = True
         elif ConverterInput.casefold() == "q":
