@@ -118,6 +118,10 @@ Input: """)
             vMetadata.write('{"_artist": "'+songArtist+'", "_difficulties": ["'+difficultyName+'.json"], "_mappers": ["'+mapper+'"], "_music": "'+audio+'", "_title": "'+songTitle+'", "_version": 1}')
             vMetadata.close() 
             
+            # hitobject parser + calculator
+            
+            
+            
         elif ConverterInput.casefold() == "b":
             restart = True
         elif ConverterInput.casefold() == "q":
