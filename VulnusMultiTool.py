@@ -7,8 +7,8 @@ from pathlib import Path
 
 # dir variables
 outputpath = 'Output'
-outputconvertedpath = 'Output/converted.json'
-metaconvertedpath = 'Output/meta.json'
+convertedoutput = 'Output/converted.json'
+metaoutput = 'Output/meta.json'
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -98,17 +98,21 @@ If you would like to go back, type "b"
 If you would like to quit the program, type "q"
 
 Input: """)
-        if ConverterInput == "1":
+        if ConverterInput == "1": # ss to vulnus
             mapData.split(',')
             
-        if ConverterInput == "2":
+        if ConverterInput == "2": # osu to vulnus
+            # osu metadata parsing
             audio = mapData.split("AudioFilename: ")[1].split('\n')[0]
             songTitle = mapData.split("Title:")[1].split('\n')[0]
             songArtist = mapData.split("Artist:")[1].split('\n')[0]
             mapper = mapData.split("Creator:")[1].split('\n')[0]
             difficultyName = mapData.split("Version:")[1].split('\n')[0]
             hitObjects = mapData.split("[HitObjects]\n")[1]
-            exit()
+            
+            # metadata writer
+            
+            
             
         elif ConverterInput.casefold() == "b":
             restart = True
