@@ -128,17 +128,20 @@ If you would like to quit the program, type "q"
 
 Input: """)
         if MiscInput == "1":
+            url = input("""Type in your youtube URL you would like to extract audio from.
+
+Input: """)
+            filename = input("""Please enter what you want the filename to be (you don't need to include .mp3)
+
+Input: """)
             ydl_opts = {
                 'format': 'm4a',
-                'outtmpl':'Output/output.%(ext)s',
+                'outtmpl':'Output/'+filename+'.%(ext)s',
                 'postprocessors': [{  # Extract audio using ffmpeg
                     'key': 'FFmpegExtractAudio',
                     'preferredcodec': 'mp3',
                 }]
             }  
-            url = input("""Type in your youtube URL you would like to extract audio from.
-
-Input: """)
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 error_code = ydl.download(url)
             os.replace("output.mp3", outputpath)
