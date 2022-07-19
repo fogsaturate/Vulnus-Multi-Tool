@@ -1,6 +1,7 @@
 import math
 import os
 import json
+from time import time
 from tkinter import W
 import yt_dlp
 import ffmpeg
@@ -64,8 +65,6 @@ ssMap = mapData.split(',')
 ssMapLength = len(ssMap)
 
 # Vulnus Parsing Variables
-vMapData = open(outputconvertedpath, "w")
-vMetadata = open(outputmetapath, "w")
 vMap = mapData.split('{"_time": ')
 vMapAttr = vMap[0].split(' "_')
 vMapLength = len(vMap)
@@ -101,6 +100,8 @@ If you would like to quit the program, type "q"
 
 Input: """)
         if ConverterInput == "1":
+            vMapData = open(outputconvertedpath, "w")
+            vMetadata = open(outputmetapath, "w")
             map = open("map.txt") #opens "map.txt"
             mapData = map.read() #reads "map.txt" for map data
 
@@ -132,11 +133,11 @@ Input: """)
                 ssX = ssMapDataParsed[0] #sets the first item in the list of parsed data equal to ssX (first item will be the x coordinate of the note)
                 ssY = ssMapDataParsed[1] #sets the second item in the list of parsed data equal to ssY (second item will be the y coordinate of the note)
                 ssTime = ssMapDataParsed[2] #sets the third item in the list of parsed data equal to ssTime (third item will be the time stamp of the note)
-                if pos == 1: #checks to see whether it is the first  
-                    vConvertedData.write(str(round((int(ssTime)+mapOffset)/1000, 3))+', ')
+                if pos == 1: #checks to see whether it is the first value since it writes [{"_time": automatically
+                    vConvertedData.write(str(round((int(ssTime)+mapOffset)/1000, 3))+', ') #adds the time
                 else:
-                    vConvertedData.write('{"_time": '+str(round((int(ssTime)+mapOffset)/1000, 3))+', ')
-                if ssX == "0":
+                    vConvertedData.write('{"_time": '+str(round((int(ssTime)+mapOffset)/1000, 3))+', ') #adds the time
+                if ssX == "0": #all of this is to check the position of the notes (sound space starts from 0, 0 which is bottom left, where vulnus starts at -1, -1)
                     vConvertedData.write('"_x": -1, ')
                 elif ssX == "1":
                     vConvertedData.write('"_x": 0, ')
@@ -144,7 +145,7 @@ Input: """)
                     vConvertedData.write('"_x": 1, ')
                 else:
                     vConvertedData.write('"_x": '+str(float(ssX)-1)+', ')     
-                if ssY == "0" and pos == ssMapLength-1:
+                if ssY == "0" and pos == ssMapLength-1: #checks to see if any of the positions are at the end of the song (since the y would have ]} on the end)
                     vConvertedData.write('"_y": -1}]}')
                 elif ssY == "0":
                     vConvertedData.write('"_y": -1}, ')
@@ -156,14 +157,21 @@ Input: """)
                     vConvertedData.write('"_y": 1}]}')
                 elif ssY == "2":
                     vConvertedData.write('"_y": 1}, ')
-                elif isinstance(float(ssY), float) and pos == ssMapLength-1:
+                elif isinstance(float(ssY), float) and pos == ssMapLength-1: #also checks for the instance of quantum (any none integer ssY value)
                     vConvertedData.write('"_y": '+str(float(ssY)-1)+'}]}')
                 else:
                     vConvertedData.write('"_y": '+str(float(ssY)-1)+'}, ')
-            vConvertedData.close()
-            
+            vConvertedData.close() #closes "converted.json" to save its contents
+        
         if ConverterInput == "2": # osu to vulnus
+            
+            mapOffset = int(input("\nMap Offset (ms): "))
+            
             # osu metadata parsing
+            
+            vMapData = open(outputconvertedpath, "w")
+            vMetaData = open(outputmetapath, "w")
+            
             audio = mapData.split("AudioFilename: ")[1].split('\n')[0]
             songTitle = mapData.split("Title:")[1].split('\n')[0]
             songArtist = mapData.split("Artist:")[1].split('\n')[0]
@@ -171,16 +179,37 @@ Input: """)
             difficultyName = mapData.split("Version:")[1].split('\n')[0]
             
             hitObjects = mapData.split("[HitObjects]\n")[1]
-            
+            hitObjectsLine = hitObjects.split("\n")
+
             # metadata writer
             
-            vMetadata.write('{"_artist": "'+songArtist+'", "_difficulties": ["'+difficultyName+'.json"], "_mappers": ["'+mapper+'"], "_music": "'+audio+'", "_title": "'+songTitle+'", "_version": 1}')
-            vMetadata.close() 
+            vMetaData.write('{"_artist": "'+songArtist+'", "_difficulties": ["'+difficultyName+'.json"], "_mappers": ["'+mapper+'"], "_music": "'+audio+'", "_title": "'+songTitle+'", "_version": 1}')
+            vMetaData.close()
             
             # hitobject parser + calculator
-            
+            vMapData.write('{"_approachDistance": 50, "_approachTime": 1, "_name": "'+difficultyName+'", "_notes": [')
 
-        elif ConverterInput.casefold() == "b":
+            for pos in range(0, len(hitObjectsLine)):
+                mapSplit = hitObjectsLine[pos].split(",")
+                x = mapSplit[0]
+                y = mapSplit[1]
+                ms = mapSplit[2]
+                
+                vX = (int(x) - 320) / 64
+                vY = (int(y) - 256) / 64
+                vS = int(ms) / 1000 
+                
+                if pos == len(hitObjectsLine)-1:
+                    vMapData.write('{"_time": '+str(vS)+', "_x": '+str(vX)+', "_y": '+str(vY)+'}]}')
+                else:
+                    vMapData.write('{"_time": '+str(vS)+', "_x": '+str(vX)+', "_y": '+str(vY)+'}, ')
+
+                print(pos)
+
+
+            vMapData.close()
+
+        elif ConverterInput.casefold() == "b": 
             restart = True
         elif ConverterInput.casefold() == "q":
             exit()
