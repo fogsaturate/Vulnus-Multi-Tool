@@ -8,7 +8,7 @@ from pathlib import Path
 
 # dir variables
 outputpath = 'Output'
-outputconvertedpath = 'Output/vConvertedData.json'
+outputconvertedpath = 'Output/converted.json'
 outputmetapath = 'Output/meta.json'
 
 def cls():
@@ -200,9 +200,6 @@ Input: """)
 
         if mappingToolInput == "1":
             map = open("map.txt")
-            vMapData = open(convertedoutput, "w")
-            vMapData.write("the yeah")
-            vMapData.close()
         elif mappingToolInput.casefold() == "b":
             restart = True        
     
