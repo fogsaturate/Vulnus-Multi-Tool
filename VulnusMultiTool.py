@@ -56,6 +56,18 @@ if deletesettingsjsonoption == True:
     for f in os.listdir(outputpath):
         os.remove(os.path.join(outputpath, f))
 
+# Sound Space Parsing Variables
+map = open("map.txt")
+mapData = map.read()
+ssMap = mapData.split(',')
+ssMapLength = len(ssMap)
+
+# Vulnus Parsing Variables
+vMapData = open(outputconvertedpath, "w")
+vMap = mapData.split('{"_time": ')
+vMapAttr = vMap[0].split(' "_')
+vMapLength = len(vMap)
+
 restart = True
 while restart:
     cls()
@@ -85,10 +97,9 @@ If you would like to quit the program, type "q"
 
 Input: """)
         if ConverterInput == "1":
-            ssmapdata = open("map.txt")
-            vulnusmapdata = open(outputconvertedpath, "w")
-            vulnusmapdata.write("the yeah")
-            vulnusmapdata.close()
+            map = open("map.txt")
+            mapData = map.read()
+            vMapData = open(outputconvertedpath, "w")
         elif ConverterInput.casefold() == "b":
             restart = True
         elif ConverterInput.casefold() == "q":
@@ -108,10 +119,10 @@ If you would like to quit the program, type "q"
 Input: """)
 
         if mappingToolInput == "1":
-            ssmapdata = open("map.txt")
-            vulnusmapdata = open(outputconvertedpath, "w")
-            vulnusmapdata.write("the yeah")
-            vulnusmapdata.close()
+            map = open("map.txt")
+            vMapData = open(outputconvertedpath, "w")
+            vMapData.write("the yeah")
+            vMapData.close()
         elif mappingToolInput.casefold() == "b":
             restart = True        
     
