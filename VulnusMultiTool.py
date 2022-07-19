@@ -1,10 +1,7 @@
 import math
 import os
 import json
-from time import time
-from tkinter import W
 import yt_dlp
-import ffmpeg
 from pathlib import Path
 
 # dir variables
@@ -116,7 +113,7 @@ Input: """)
             mapMusic = str(input("\nMusic Filename: "))
             mapTitle = str(input("\nMap Title: "))
 
-            vMetaData.write('{"_artist": "'+musicArtist+'", "_difficulties": ["vConvertedData.json"], "_mappers": ["'+mapMappers+'"], "_music": "'+mapMusic+'", "_title": "'+mapTitle+'", "_version": 1}')
+            vMetaData.write('{"_artist": "'+musicArtist+'", "_difficulties": ["converted.json"], "_mappers": ["'+mapMappers+'"], "_music": "'+mapMusic+'", "_title": "'+mapTitle+'", "_version": 1}')
             #line above writes all the data the user just inputted into the "meta.json" file
             vMetaData.close()
             #line above closes the "meta.json" file to save its contents
@@ -220,17 +217,67 @@ Input: """)
         cls()
         mappingToolInput = input("""Please type in which Mapping Tool you would like to choose.
                     
-1. Map Resizer (Vulnus)
+1. Map Resizer
+
+2. Offset Adjuster
 
 If you would like to go back, type "b"
 If you would like to quit the program, type "q"
 
 Input: """)
 
-        if mappingToolInput == "1":
+        if mappingToolInput == "1": #map resizer
             map = open("map.txt")
+            vConvertedData = open(outputconvertedpath, "w")
+            mapData = map.read()
+
+            vMapData = mapData.split('{"_time": ')
+            vMapDataLength = len(vMapData)
+            vMapAttributes = vMap[0].split(' "_')
+
+            vConvertedData.write(vMapAttributes[0]+' "_'+vMapAttributes[1]+' "_'+vMapAttributes[2]+' "_'+vMapAttributes[3]+'{')
+            newSize = float(input("\nInput a multiplier (eg, 1.5): "))
+            for pos in range(1, vMapDataLength): 
+                vMapDataSplit = vMapData[pos].split(', ')
+                vTime = vMapDataSplit[0]
+                vX = vMapDataSplit[1].split('"_x": ')[1]
+                vY = vMapDataSplit[2].split('"_y": ')[1].split('}')[0]
+                vNewX = float(vX) * newSize
+                vNewY = float(vY) * newSize
+                if pos == vMapLength-1:
+                    vConvertedData.write('"_time": '+str(float(vTime))+', "_x": '+str(vNewX)+', "_y": '+str(vNewY)+'}]}')
+                else:
+                    vConvertedData.write('"_time": '+str(float(vTime))+', "_x": '+str(vNewX)+', "_y": '+str(vNewY)+'}, {')
+                    
+        elif mappingToolInput == "2":
+            map = open("map.txt")
+            vConvertedData = open(outputconvertedpath, "w")
+            mapData = map.read()
+
+            vMapData = mapData.split('{"_time": ')
+            vMapDataLength = len(vMapData)
+            vMapAttributes = vMap[0].split(' "_')
+            
+            vConvertedData.write(vMapAttr[0]+' "_'+vMapAttr[1]+' "_'+vMapAttr[2]+' "_'+vMapAttr[3]+'{')
+            newOffset = float(input("\nInput an offset (ms): "))
+            mapOffset = newOffset / 1000
+            
+            for pos in range(1, vMapLength):
+                vOffsetMapSplit = vMap[pos].split(', ')
+                vOffsetMapTime = vOffsetMapSplit[0]
+                vOffsetX = vOffsetMapSplit[1].split('"_x": ')[1]
+                vOffsetY = vOffsetMapSplit[2].split('"_y": ')[1].split('}')[0]
+                if pos == vMapLength-1:
+                    vConvertedData.write('"_time": '+str(round(float(vOffsetMapTime)+mapOffset, 3))+', "_x": '+vOffsetX+', "_y": '+vOffsetY+'}]}')
+                else:
+                    vConvertedData.write('"_time": '+str(round(float(vOffsetMapTime)+mapOffset, 3))+', "_x": '+vOffsetX+', "_y": '+vOffsetY+'}, {')
+            vConvertedData.close()
+
+        elif mappingToolInput.casefold() == "q":
+            exit()
+
         elif mappingToolInput.casefold() == "b":
-            restart = True        
+            restart = True
     
     # Mapping Tools Category -------------------------------
     
@@ -268,7 +315,7 @@ Input: """)
             restart = True
         
     elif optionInput.casefold() == "q":
-        break
+        exit()
     
     elif optionInput.casefold() == "d":
         for f in os.listdir(outputpath):
