@@ -7,9 +7,11 @@ from pathlib import Path
 
 # dir variables
 outputpath = 'Output'
-# variables for vulnus
 outputconvertedpath = 'Output/converted.json'
 metaconvertedpath = 'Output/meta.json'
+
+def cls():
+    os.system('cls' if os.name=='nt' else 'clear')
 
 if not os.path.exists(outputpath):
     os.makedirs(outputpath)
@@ -56,7 +58,8 @@ if deletesettingsjsonoption == True:
 
 restart = True
 while restart:
-    OptionInput = input("""Please type in which category you would like to choose.
+    cls()
+    optionInput = input("""Please type in which category you would like to choose.
                         
     1. Converters (eg. Sound Space - Vulnus, osu! - Sound Space)
 
@@ -71,11 +74,9 @@ Input: """)
 
     # Converter Input Category -------------------------------
 
-    if OptionInput == "1":
-        ConverterInput = input("""
-----------------------------------------------------------
-
-Please type in which converter you would like to choose.
+    if optionInput == "1":
+        cls()
+        ConverterInput = input("""Please type in which converter you would like to choose.
                     
 1. Sound Space ---> Vulnus
 
@@ -92,13 +93,12 @@ Input: """)
             restart = True
         elif ConverterInput.casefold() == "q":
             exit()
+    
     # Mapping Tools Category -------------------------------
 
-    elif OptionInput == "2":
-        MappingToolInput = input("""
-----------------------------------------------------------
-
-Please type in which Mapping Tool you would like to choose.
+    elif optionInput == "2":
+        cls()
+        mappingToolInput = input("""Please type in which Mapping Tool you would like to choose.
                     
 1. Map Resizer (Vulnus)
 
@@ -107,19 +107,19 @@ If you would like to quit the program, type "q"
 
 Input: """)
 
-        if MappingToolInput == "1":
+        if mappingToolInput == "1":
             ssmapdata = open("map.txt")
             vulnusmapdata = open(outputconvertedpath, "w")
             vulnusmapdata.write("the yeah")
             vulnusmapdata.close()
-        elif MappingToolInput.casefold() == "b":
+        elif mappingToolInput.casefold() == "b":
             restart = True        
     
-    elif OptionInput == "3":
-        MiscInput = input("""
-----------------------------------------------------------
-
-Please type in which Miscellaneous option you would like to choose.
+    # Mapping Tools Category -------------------------------
+    
+    elif optionInput == "3":
+        cls()
+        miscInput = input("""Please type in which Miscellaneous option you would like to choose.
                     
 1. Audio Downloader (Youtube)
 
@@ -127,10 +127,12 @@ If you would like to go back, type "b"
 If you would like to quit the program, type "q"
 
 Input: """)
-        if MiscInput == "1":
+        if miscInput == "1":
+            cls()
             url = input("""Type in your youtube URL you would like to extract audio from.
 
 Input: """)
+            cls()
             filename = input("""Please enter what you want the filename to be (you don't need to include .mp3)
 
 Input: """)
@@ -145,13 +147,13 @@ Input: """)
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 error_code = ydl.download(url)
             os.replace("output.mp3", outputpath)
-        elif MappingToolInput.casefold() == "b":
+        elif mappingToolInput.casefold() == "b":
             restart = True
         
-    elif OptionInput.casefold() == "q":
+    elif optionInput.casefold() == "q":
         break
     
-    elif OptionInput.casefold() == "d":
+    elif optionInput.casefold() == "d":
         for f in os.listdir(outputpath):
             os.remove(os.path.join(outputpath, f))
 
