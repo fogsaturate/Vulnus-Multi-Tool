@@ -92,14 +92,24 @@ Input: """)
                     
 1. Sound Space ---> Vulnus
 
+2. osu! ---> Vulnus (haxagon is a very mean person cause he hates SSQE)
+
 If you would like to go back, type "b"
 If you would like to quit the program, type "q"
 
 Input: """)
         if ConverterInput == "1":
-            map = open("map.txt")
-            mapData = map.read()
-            vMapData = open(outputconvertedpath, "w")
+            mapData.split(',')
+            
+        if ConverterInput == "2":
+            audio = mapData.split("AudioFilename: ")[1].split('\n')[0]
+            songTitle = mapData.split("Title:")[1].split('\n')[0]
+            songArtist = mapData.split("Artist:")[1].split('\n')[0]
+            mapper = mapData.split("Creator:")[1].split('\n')[0]
+            difficultyName = mapData.split("Version:")[1].split('\n')[0]
+            hitObjects = mapData.split("[HitObjects]\n")[1]
+            exit()
+            
         elif ConverterInput.casefold() == "b":
             restart = True
         elif ConverterInput.casefold() == "q":
