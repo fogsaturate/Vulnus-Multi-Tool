@@ -1,6 +1,7 @@
 import math
 import os
 import json
+from tkinter import W
 import yt_dlp
 import ffmpeg
 from pathlib import Path
@@ -63,7 +64,8 @@ ssMap = mapData.split(',')
 ssMapLength = len(ssMap)
 
 # Vulnus Parsing Variables
-vMapData = open(outputconvertedpath, "w")
+vMapData = open(convertedoutput, "w")
+vMetadata = open(metaoutput, "w")
 vMap = mapData.split('{"_time": ')
 vMapAttr = vMap[0].split(' "_')
 vMapLength = len(vMap)
@@ -108,11 +110,13 @@ Input: """)
             songArtist = mapData.split("Artist:")[1].split('\n')[0]
             mapper = mapData.split("Creator:")[1].split('\n')[0]
             difficultyName = mapData.split("Version:")[1].split('\n')[0]
+            
             hitObjects = mapData.split("[HitObjects]\n")[1]
             
             # metadata writer
             
-            
+            vMetadata.write('{"_artist": "'+songArtist+'", "_difficulties": ["'+difficultyName+'.json"], "_mappers": ["'+mapper+'"], "_music": "'+audio+'", "_title": "'+songTitle+'", "_version": 1}')
+            vMetadata.close() 
             
         elif ConverterInput.casefold() == "b":
             restart = True
@@ -134,7 +138,7 @@ Input: """)
 
         if mappingToolInput == "1":
             map = open("map.txt")
-            vMapData = open(outputconvertedpath, "w")
+            vMapData = open(convertedoutput, "w")
             vMapData.write("the yeah")
             vMapData.close()
         elif mappingToolInput.casefold() == "b":
