@@ -11,6 +11,9 @@ outputpath = 'Output'
 outputconvertedpath = 'Output/converted.json'
 metaconvertedpath = 'Output/meta.json'
 
+if not os.path.exists(outputpath):
+    os.makedirs(outputpath)
+
 settings = Path("settings.json")
 if not settings.is_file():
     settingstruejson = {
