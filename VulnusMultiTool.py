@@ -99,14 +99,14 @@ Input: """)
         if ConverterInput == "1":
             vMapData = open(outputconvertedpath, "w")
             vMetadata = open(outputmetapath, "w")
-            map = open("map.txt") #opens "map.txt"
-            mapData = map.read() #reads "map.txt" for map data
+            map = open("map.txt") # opens "map.txt"
+            mapData = map.read() # reads "map.txt" for map data
 
-            ssMapDataSplit = mapData.split(',') #splits the data at "," to receive each individual x, y and time stamp
-            ssMapDataLength = len(ssMapDataSplit) #finds the length of the split data
+            ssMapDataSplit = mapData.split(',') # splits the data at "," to receive each individual x, y and time stamp
+            ssMapDataLength = len(ssMapDataSplit) # finds the length of the split data
             
-            vConvertedData = open(outputconvertedpath, "w") #opens the "vConvertedData.json" file located in the 'Output' folder
-            vMetaData = open(outputmetapath, "w") #opens the "meta.json" file located in the 'Output' folder
+            vConvertedData = open(outputconvertedpath, "w") # opens the "vConvertedData.json" file located in the 'Output' folder
+            vMetaData = open(outputmetapath, "w") # opens the "meta.json" file located in the 'Output' folder
 
             musicArtist = str(input("\nMusic Artist: "))
             mapMappers = str(input("\nMap Mapper(s): "))
@@ -114,9 +114,9 @@ Input: """)
             mapTitle = str(input("\nMap Title: "))
 
             vMetaData.write('{"_artist": "'+musicArtist+'", "_difficulties": ["converted.json"], "_mappers": ["'+mapMappers+'"], "_music": "'+mapMusic+'", "_title": "'+mapTitle+'", "_version": 1}')
-            #line above writes all the data the user just inputted into the "meta.json" file
+            # line above writes all the data the user just inputted into the "meta.json" file
             vMetaData.close()
-            #line above closes the "meta.json" file to save its contents
+            # line above closes the "meta.json" file to save its contents
 
             mapApproachDistance = int(input("\nApproach Distance: "))
             mapApproachTime = int(input("\nApproach Time (s): "))
@@ -124,17 +124,17 @@ Input: """)
             mapOffset = int(input("\nMap Offset (ms): "))
 
             vConvertedData.write('{"_approachDistance": '+str(mapApproachDistance)+', "_approachTime": '+str(mapApproachTime)+', "_name": "'+mapName+'", "_notes": [{"_time": ')
-            #line above writes all the data the user just inputted into the "vConvertedData.json" file
-            for pos in range(1, ssMapDataLength): #loops through the list of positions and times throughout the map data
-                ssMapDataParsed = ssMapDataSplit[pos].split("|") #splits the map data at "|"
-                ssX = ssMapDataParsed[0] #sets the first item in the list of parsed data equal to ssX (first item will be the x coordinate of the note)
-                ssY = ssMapDataParsed[1] #sets the second item in the list of parsed data equal to ssY (second item will be the y coordinate of the note)
-                ssTime = ssMapDataParsed[2] #sets the third item in the list of parsed data equal to ssTime (third item will be the time stamp of the note)
-                if pos == 1: #checks to see whether it is the first value since it writes [{"_time": automatically
-                    vConvertedData.write(str(round((int(ssTime)+mapOffset)/1000, 3))+', ') #adds the time
+            # line above writes all the data the user just inputted into the "vConvertedData.json" file
+            for pos in range(1, ssMapDataLength): # loops through the list of positions and times throughout the map data
+                ssMapDataParsed = ssMapDataSplit[pos].split("|") # splits the map data at "|"
+                ssX = ssMapDataParsed[0] # sets the first item in the list of parsed data equal to ssX (first item will be the x coordinate of the note)
+                ssY = ssMapDataParsed[1] # sets the second item in the list of parsed data equal to ssY (second item will be the y coordinate of the note)
+                ssTime = ssMapDataParsed[2] # sets the third item in the list of parsed data equal to ssTime (third item will be the time stamp of the note)
+                if pos == 1: # checks to see whether it is the first value since it writes [{"_time": automatically
+                    vConvertedData.write(str(round((int(ssTime)+mapOffset)/1000, 3))+', ') # adds the time
                 else:
                     vConvertedData.write('{"_time": '+str(round((int(ssTime)+mapOffset)/1000, 3))+', ') #adds the time
-                if ssX == "0": #all of this is to check the position of the notes (sound space starts from 0, 0 which is bottom left, where vulnus starts at -1, -1)
+                if ssX == "0": # all of this is to check the position of the notes (sound space starts from 0, 0 which is bottom left, where vulnus starts at -1, -1)
                     vConvertedData.write('"_x": -1, ')
                 elif ssX == "1":
                     vConvertedData.write('"_x": 0, ')
@@ -142,7 +142,7 @@ Input: """)
                     vConvertedData.write('"_x": 1, ')
                 else:
                     vConvertedData.write('"_x": '+str(float(ssX)-1)+', ')     
-                if ssY == "0" and pos == ssMapLength-1: #checks to see if any of the positions are at the end of the song (since the y would have ]} on the end)
+                if ssY == "0" and pos == ssMapLength-1: # checks to see if any of the positions are at the end of the song (since the y would have ]} on the end)
                     vConvertedData.write('"_y": -1}]}')
                 elif ssY == "0":
                     vConvertedData.write('"_y": -1}, ')
@@ -154,11 +154,11 @@ Input: """)
                     vConvertedData.write('"_y": 1}]}')
                 elif ssY == "2":
                     vConvertedData.write('"_y": 1}, ')
-                elif isinstance(float(ssY), float) and pos == ssMapLength-1: #also checks for the instance of quantum (any none integer ssY value)
+                elif isinstance(float(ssY), float) and pos == ssMapLength-1: # also checks for the instance of quantum (any none integer ssY value)
                     vConvertedData.write('"_y": '+str(float(ssY)-1)+'}]}')
                 else:
                     vConvertedData.write('"_y": '+str(float(ssY)-1)+'}, ')
-            vConvertedData.close() #closes "converted.json" to save its contents
+            vConvertedData.close() # closes "converted.json" to save its contents
         
         if ConverterInput == "2": # osu to vulnus
             
