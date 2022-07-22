@@ -2,9 +2,10 @@ import math
 import os
 import json
 import yt_dlp
+import time
 from pathlib import Path
 
-# dir variables
+# dir variabless
 outputpath = 'Output'
 outputconvertedpath = 'Output/converted.json'
 outputmetapath = 'Output/meta.json'
@@ -75,7 +76,7 @@ while restart:
 
     2. Mapping Tools (eg. Resizer, Randomizer)
 
-    3. Miscellaneous (eg. Audio Downloader, Song Length Checker)
+    3. Miscellaneous (eg. Audio Downloader, Map Length Checker)
 
     If you would like to quit the program, type "q"
     If you would like to delete everything in output, type "d"
@@ -221,6 +222,8 @@ Input: """)
 
 2. Offset Adjuster
 
+3. Map Randomizer
+
 If you would like to go back, type "b"
 If you would like to quit the program, type "q"
 
@@ -273,11 +276,33 @@ Input: """)
                     vConvertedData.write('"_time": '+str(round(float(vOffsetMapTime)+mapOffset, 3))+', "_x": '+vOffsetX+', "_y": '+vOffsetY+'}, {')
             vConvertedData.close()
 
+        elif mappingToolInput == "3":
+            map = open("map.txt")
+            vConvertedData = open(outputconvertedpath, "w")
+            mapData = map.read()
+
+            vMapData = mapData.split('{"_time": ')
+            vMapDataLength = len(vMapData)
+            vMapAttributes = vMap[0].split(' "_')
+            
+            vConvertedData.write(vMapAttr[0]+' "_'+vMapAttr[1]+' "_'+vMapAttr[2]+' "_'+vMapAttr[3]+'{')
+
+            for pos in range(1, vMapLength):
+                vRandomizerMapSplit = vMap[pos].split(', ')
+                vRandomizerMapTime = vRandomizerMapSplit[0]
+                vRandomX = vRandomizerMapSplit[1].split('"_x": ')[1]
+                vRandomY = vRandomizerMapSplit[2].split('"_y": ')[1].split('}')[0]
+            vConvertedData.close()
+
         elif mappingToolInput.casefold() == "q":
             exit()
 
         elif mappingToolInput.casefold() == "b":
             restart = True
+
+        else: 
+            cls()
+            input("Done converting! Press Enter to return.")
     
     # Mapping Tools Category -------------------------------
     
