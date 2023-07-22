@@ -4,11 +4,12 @@ import json
 import yt_dlp
 import time
 from pathlib import Path
+import sys
 
 # dir variabless
-outputpath = 'Output'
-outputconvertedpath = 'Output/converted.json'
-outputmetapath = 'Output/meta.json'
+outputpath = sys.path[0]+'/Output'
+outputconvertedpath = sys.path[0]+'/Output/converted.json'
+outputmetapath = sys.path[0]+'/Output/meta.json'
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
